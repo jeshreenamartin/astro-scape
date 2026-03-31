@@ -1,0 +1,236 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+:root {
+  --bg-color: #050510;
+  --neon-cyan: #0ff;
+  --neon-purple: #b026ff;
+  --neon-pink: #ff00ff;
+  --pixel-size: 4px;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  font-family: 'Press Start 2P', monospace;
+  color: white;
+  user-select: none;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Neon Text Glow Utilities */
+.text-neon-cyan {
+  color: var(--neon-cyan);
+  text-shadow: 0 0 5px var(--neon-cyan), 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan);
+}
+
+.text-neon-pink {
+  color: var(--neon-pink);
+  text-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+}
+
+/* Base layout containers */
+.game-container {
+  width: 100%;
+  max-width: 800px;
+  height: 400px;
+  position: relative;
+  overflow: hidden;
+  background-color: var(--bg-color);
+  border: 4px solid var(--neon-purple);
+  box-shadow: 0 0 15px var(--neon-purple), inset 0 0 15px var(--neon-purple);
+  image-rendering: pixelated;
+}
+
+.screen-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: rgba(5, 5, 16, 0.85);
+  z-index: 100;
+}
+
+.btn-retro {
+  background: transparent;
+  color: var(--neon-cyan);
+  border: 4px solid var(--neon-cyan);
+  padding: 15px 30px;
+  font-family: inherit;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 30px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px var(--neon-cyan), inset 0 0 10px var(--neon-cyan);
+  transition: all 0.2s;
+}
+
+.btn-retro:hover {
+  background: var(--neon-cyan);
+  color: var(--bg-color);
+  box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px var(--neon-cyan);
+}
+
+.btn-retro:active {
+  transform: scale(0.95);
+}
+
+/* Game Layers */
+.ground-layer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 200%;
+  height: 20px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--neon-purple),
+    var(--neon-purple) 20px,
+    #2a0a4a 20px,
+    #2a0a4a 40px
+  );
+  border-top: 4px solid var(--neon-purple);
+  box-shadow: 0 -5px 15px rgba(176, 38, 255, 0.5);
+  z-index: 10;
+}
+
+.star {
+  position: absolute;
+  background-color: white;
+  width: 2px;
+  height: 2px;
+  box-shadow: 0 0 4px white;
+}
+
+/* Entities */
+.pixel-dog {
+  position: absolute;
+  left: 50px;
+  width: 32px;
+  height: 32px;
+  /* Basic 8-bit styling via block color since we can't easily draw full sprite in pure CSS quickly, 
+     but we can make it look like a dog block */
+  background-color: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+  z-index: 20;
+}
+
+/* Dog details using pseudo-elements */
+.pixel-dog::before {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--bg-color); /* Eye */
+}
+
+.pixel-dog::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 4px;
+  width: 8px;
+  height: 12px;
+  background-color: var(--neon-cyan); /* Legs */
+  box-shadow: 16px 0 0 var(--neon-cyan);
+}
+
+.dog-run {
+  animation: run-anim 0.2s infinite alternate steps(2);
+}
+
+@keyframes run-anim {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-2px); }
+}
+
+/* Obstacles */
+.obstacle {
+  position: absolute;
+  z-index: 20;
+}
+
+.obstacle-spike {
+  width: 0;
+  height: 0;
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 30px solid var(--neon-pink);
+  filter: drop-shadow(0 0 8px var(--neon-pink));
+}
+
+.obstacle-rover {
+  width: 40px;
+  height: 20px;
+  background-color: var(--neon-pink);
+  box-shadow: 0 0 10px var(--neon-pink);
+  border-radius: 4px 4px 0 0;
+}
+
+.obstacle-ufo {
+  width: 50px;
+  height: 20px;
+  background-color: var(--neon-cyan);
+  border-radius: 50% 50% 20% 20%;
+  box-shadow: 0 0 15px var(--neon-cyan);
+  animation: hover 1s ease-in-out infinite alternate;
+}
+
+@keyframes hover {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-10px); }
+}
+
+/* UI */
+.hud {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  right: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 50;
+  pointer-events: none; /* Let clicks pass through to game */
+}
+
+.score-display {
+  font-size: 14px;
+  text-shadow: 0 0 5px white;
+}
+
+.btn-pause {
+  pointer-events: auto;
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 12px;
+}
+.btn-pause:hover {
+  background: white;
+  color: var(--bg-color);
+}
